@@ -66,4 +66,23 @@ public class RewardOperations extends AbstractOperations {
         return this.transport.doPut(path, null, null, null, PointTransactionResponse.class).getResult();
     }
 
+    public ModymPointTransaction createCreditTransaction(long customerId, BigDecimal points, int expiryMonths,
+            String note) throws ModymException {
+        Map<String, Object> params = MapUtils.asMap("customerId", customerId, "points", points, "monthsToExpiry",
+                expiryMonths, "note", note);
+        return this.transport.doPost("loyalty/credit", params, null, null, PointTransactionResponse.class).getResult();
+    }
+
+    public ModymPointTransaction approveCreditTransaction(long transactionId) throws ModymException {
+        String path = "loyalty/credit/" + Long.toString(transactionId) + "/approve";
+        return this.transport.doPut(path, null, null, null, PointTransactionResponse.class).getResult();
+    }
+
+    public ModymPointTransaction rejectCreditTransaction(long transactionId) throws ModymException {
+        String path = "loyalty/credit/" + Long.toString(transactionId) + "/reject";
+        return this.transport.doPut(path, null, null, null, PointTransactionResponse.class).getResult();
+    }
+    
+    // /credit/{id}/approve
+
 }
