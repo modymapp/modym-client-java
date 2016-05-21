@@ -23,9 +23,9 @@ public class ModymProduct extends UDFType {
 
     protected String sku;
 
-    protected BigDecimal price;
+    protected BigDecimal unitPrice;
 
-    protected BigDecimal cost;
+    protected BigDecimal unitCost;
 
     protected Long categoryId;
 

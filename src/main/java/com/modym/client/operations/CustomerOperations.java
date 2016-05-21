@@ -1,13 +1,17 @@
 /************************************************************************ 
  * Copyright MODYM, Ltd.
  */
+
 package com.modym.client.operations;
 
+import java.util.List;
 import java.util.Map;
 
 import com.modym.client.ModymException;
 import com.modym.client.objects.ModymCustomer;
+import com.modym.client.objects.ModymPurchase;
 import com.modym.client.response.CustomerResponse;
+import com.modym.client.response.PurchaseListResponse;
 import com.modym.client.utils.MapUtils;
 
 /**
@@ -49,8 +53,13 @@ public class CustomerOperations extends AbstractOperations {
     }
 
     public ModymCustomer updateCustomer(long customerId, Map<String, Object> customer) throws ModymException {
-        Map<String, Object> params = customer;
-        return this.transport.doPost("customers", null, params, null, CustomerResponse.class).getResult();
+        String path = "customers/" + Long.toString(customerId);
+        return this.transport.doPut(path, null, customer, null, CustomerResponse.class).getResult();
+    }
+
+    public List<ModymPurchase> getCustomerPurchases(long customerId) throws ModymException {
+        String path = "customers/" + Long.toString(customerId) + "/purchases";
+        return this.transport.doGet(path, null, null, PurchaseListResponse.class).getResult();
     }
 
 }

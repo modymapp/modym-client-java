@@ -32,9 +32,9 @@ public class ModymCustomer extends UDFType {
     private Integer age;
     private String address1;
     private String address2;
-    private String zip;
-    private String city;
-    private String country;
+    private String postcode;
+    private String cityName;
+    private String countryIso2;
     private String company;
     private String position;
     private String language;

@@ -13,11 +13,10 @@ import com.modym.client.operations.CatalogOperations;
 import com.modym.client.operations.CustomerOperations;
 import com.modym.client.operations.MessageOperations;
 import com.modym.client.operations.ModymApiTransport;
+import com.modym.client.operations.PurchaseOperations;
 import com.modym.client.operations.RewardOperations;
 import com.modym.client.operations.SystemOperations;
 import com.modym.client.operations.UserOperations;
-
-import lombok.Getter;
 
 /**
  * @author bashar
@@ -30,7 +29,6 @@ public class Modym {
     private static final String DEFAULT_PREFIX = "/";
     private static final int DEFAULT_VERSION = 2;
 
-    @Getter
     private final CatalogOperations catalogOperations;
 
     private final CustomerOperations customerOperations;
@@ -39,9 +37,11 @@ public class Modym {
 
     private final RewardOperations rewardOperations;
 
-    private final SystemOperations systemOperations;
+    private final PurchaseOperations purchaseOperations;
 
     private final UserOperations userOperations;
+
+    private final SystemOperations systemOperations;
 
     /*******************************************************************************************************************
      * CONSTRUCTOR AND CONNECTION MANAGEMENT
@@ -90,6 +90,7 @@ public class Modym {
         this.customerOperations = new CustomerOperations(transport);
         this.messageOperations = new MessageOperations(transport);
         this.rewardOperations = new RewardOperations(transport);
+        this.purchaseOperations = new PurchaseOperations(transport);
         this.systemOperations = new SystemOperations(transport);
         this.userOperations = new UserOperations(transport);
     }
@@ -120,6 +121,13 @@ public class Modym {
      */
     public RewardOperations rewardOperations() {
         return this.rewardOperations;
+    }
+
+    /**
+     * @return the purchaseOperations
+     */
+    public PurchaseOperations purchaseOperations() {
+        return this.purchaseOperations;
     }
 
     /**

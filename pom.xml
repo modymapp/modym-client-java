@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.modym.client</groupId>
-  <artifactId>modym-java</artifactId>
+  <artifactId>modym-client-java</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>modym-java</name>
-  <url>http://maven.apache.org</url>
+  <name>modym-client-java</name>
+  <url>http://www.modym.com</url>
 
   <properties>
     <jdk.version>1.7</jdk.version>

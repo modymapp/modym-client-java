@@ -4,10 +4,13 @@
 package com.modym.client.operations;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import com.modym.client.ModymException;
 import com.modym.client.objects.ModymPointTransaction;
+import com.modym.client.objects.ModymPointTransaction.ModymPointDebitTransaction;
+import com.modym.client.response.PointTransactionListResponse;
 import com.modym.client.response.PointTransactionResponse;
 import com.modym.client.utils.MapUtils;
 
@@ -33,9 +36,18 @@ public class RewardOperations extends AbstractOperations {
      * @return
      * @throws ModymException
      */
-    public ModymPointTransaction getLoyaltyTransaction(String transactionId) throws ModymException {
+    public ModymPointTransaction getRewardTransaction(String transactionId) throws ModymException {
         String path = "loyalty/transactions/" + transactionId;
         return this.transport.doGet(path, null, null, PointTransactionResponse.class).getResult();
+    }
+
+    /**
+     * @param customerId The customer id for whom we should return the loyalty transactions
+     * @return
+     */
+    public List<ModymPointTransaction> getRewardTransactions(long memberId) throws ModymException {
+        String path = "loyalty/members/" + memberId + "/transactions";
+        return this.transport.doGet(path, null, null, PointTransactionListResponse.class).getResult();
     }
 
     /**
@@ -53,36 +65,32 @@ public class RewardOperations extends AbstractOperations {
             String note) throws ModymException {
         Map<String, Object> params = MapUtils.asMap("customerId", customerId, "points", points, "referenceId",
                 referenceId, "note", note, "capture", false);
-        return this.transport.doPost("loyalty/debit/points", null, params, null, PointTransactionResponse.class).getResult();
+        return this.transport.doPost("loyalty/debit/points", null, params, null, PointTransactionResponse.class)
+                .getResult();
     }
 
-    public ModymPointTransaction captureDebitTransaction(long transactionId) throws ModymException {
+    /**
+     * @param transactionId
+     * @return
+     * @throws ModymException
+     */
+    public ModymPointDebitTransaction captureDebitTransaction(long transactionId) throws ModymException {
         String path = "loyalty/debit/" + Long.toString(transactionId) + "/capture";
-        return this.transport.doPut(path, null, null, null, PointTransactionResponse.class).getResult();
+        ModymPointTransaction transaction =
+                this.transport.doPut(path, null, null, null, PointTransactionResponse.class).getResult();
+        return (ModymPointDebitTransaction) transaction;
     }
 
-    public ModymPointTransaction cancelDebitTransaction(long transactionId) throws ModymException {
+    /**
+     * @param transactionId
+     * @return
+     * @throws ModymException
+     */
+    public ModymPointDebitTransaction cancelDebitTransaction(long transactionId) throws ModymException {
         String path = "loyalty/debit/" + Long.toString(transactionId) + "/cancel";
-        return this.transport.doPut(path, null, null, null, PointTransactionResponse.class).getResult();
+        ModymPointTransaction transaction =
+                this.transport.doPut(path, null, null, null, PointTransactionResponse.class).getResult();
+        return (ModymPointDebitTransaction) transaction;
     }
-
-    public ModymPointTransaction createCreditTransaction(long customerId, BigDecimal points, int expiryMonths,
-            String note) throws ModymException {
-        Map<String, Object> params = MapUtils.asMap("customerId", customerId, "points", points, "monthsToExpiry",
-                expiryMonths, "note", note);
-        return this.transport.doPost("loyalty/credit", params, null, null, PointTransactionResponse.class).getResult();
-    }
-
-    public ModymPointTransaction approveCreditTransaction(long transactionId) throws ModymException {
-        String path = "loyalty/credit/" + Long.toString(transactionId) + "/approve";
-        return this.transport.doPut(path, null, null, null, PointTransactionResponse.class).getResult();
-    }
-
-    public ModymPointTransaction rejectCreditTransaction(long transactionId) throws ModymException {
-        String path = "loyalty/credit/" + Long.toString(transactionId) + "/reject";
-        return this.transport.doPut(path, null, null, null, PointTransactionResponse.class).getResult();
-    }
-    
-    // /credit/{id}/approve
 
 }

@@ -263,12 +263,16 @@ public class ModymApiTransport {
      */
     private <T extends ModymResponse> T execute(HttpUriRequest request, Class<T> cast)
             throws ClientProtocolException,
-            IOException {
+            IOException,
+            ModymException {
         HttpResponse response = new DefaultHttpClient().execute(request);
         HttpEntity entity = response.getEntity();
         String result = EntityUtils.toString(entity);
         T returnValue = JsonUtils.decode(result, cast);
         EntityUtils.consume(entity);
+        if (!returnValue.isSuccess()) {
+            throw new ModymException(returnValue.getError());
+        }
         return returnValue;
     }
 
