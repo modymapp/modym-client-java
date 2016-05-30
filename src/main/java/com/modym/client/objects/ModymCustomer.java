@@ -3,6 +3,7 @@
  */
 package com.modym.client.objects;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
@@ -16,7 +17,9 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ModymCustomer extends UDFType {
+public class ModymCustomer extends UDFType implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private long customerId;
     private String referenceId;
@@ -56,13 +59,13 @@ public class ModymCustomer extends UDFType {
 
     private boolean enabled;
 
-    public static enum ModymGender {
+    public enum ModymGender {
         MALE,
         FEMALE,
         UNSPECIFIED;
     }
 
-    public static enum ModymMaritalStatus {
+    public enum ModymMaritalStatus {
         SINGLE,
         MARRIED,
         WIDOWED,

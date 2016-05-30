@@ -52,9 +52,9 @@ public class Modym {
      * @param apiKey
      * @param apiSecret
      * @throws URISyntaxException 
-     * @throws ModymException 
+     * @throws ModymClientException 
      */
-    public Modym(String clientName, String clientKey, String clientSecret) throws URISyntaxException, ModymException {
+    public Modym(String clientName, String clientKey, String clientSecret) throws URISyntaxException, ModymClientException {
         this(clientName, clientKey, clientSecret, DEFAULT_SCHEME, DEFAULT_HOST, DEFAULT_PORT, DEFAULT_PREFIX,
                 DEFAULT_VERSION);
     }
@@ -63,10 +63,10 @@ public class Modym {
      * @param transport
      * @param apiKey
      * @param apiSecret
-     * @throws ModymException 
+     * @throws ModymClientException 
      */
     public Modym(String clientName, String clientKey, String clientSecret, String scheme, String host, int port,
-            String prefix, int version) throws ModymException {
+            String prefix, int version) throws ModymClientException {
         assertTrue(StringUtils.isNotBlank(clientName), "clientName cannot be empty");
         assertTrue(StringUtils.isNotBlank(clientKey), "clientKey cannot be empty");
         assertTrue(StringUtils.isNotBlank(clientSecret), "clientSecret cannot be empty");
@@ -82,7 +82,7 @@ public class Modym {
         try {
             baseUri = builder.build();
         } catch (URISyntaxException e) {
-            throw new ModymException("Invalid URI: %s://%s:%d%s/v%d", scheme, host, port, prefix, version);
+            throw new ModymClientException("Invalid URI: %s://%s:%d%s/v%d", scheme, host, port, prefix, version);
         }
 
         ModymApiTransport transport = new ModymApiTransport(clientName, clientKey, clientSecret, baseUri);
@@ -144,8 +144,8 @@ public class Modym {
         return this.userOperations;
     }
 
-    private void assertTrue(boolean condition, String message) throws ModymException {
+    private void assertTrue(boolean condition, String message) throws ModymClientException {
         if (!condition)
-            throw new ModymException(message);
+            throw new ModymClientException(message);
     }
 }

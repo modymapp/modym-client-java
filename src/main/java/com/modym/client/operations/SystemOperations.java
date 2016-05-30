@@ -6,7 +6,7 @@ package com.modym.client.operations;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.modym.client.ModymException;
+import com.modym.client.ModymClientException;
 import com.modym.client.objects.ModymCity;
 import com.modym.client.objects.ModymCountry;
 import com.modym.client.response.BigDecimalResponse;
@@ -31,28 +31,28 @@ public class SystemOperations extends AbstractOperations {
      * SYSTEM CALLS
      */
 
-    public String getProgramName() throws ModymException {
+    public String getProgramName() throws ModymClientException {
         return "[Reward Program]";
     }
 
-    public String getSystemCurrency() throws ModymException {
+    public String getSystemCurrency() throws ModymClientException {
         return this.transport.doGet("system/currency", null, null, StringResponse.class).getResult();
     }
 
-    public BigDecimal getSystemPointConversionRate() throws ModymException {
+    public BigDecimal getSystemPointConversionRate() throws ModymClientException {
         return this.transport.doGet("system/pointConversionRate", null, null, BigDecimalResponse.class).getResult();
     }
 
-    public List<ModymCountry> getCountries() throws ModymException {
+    public List<ModymCountry> getCountries() throws ModymClientException {
         return this.transport.doGet("system/countries", null, null, CountryListResponse.class).getResult();
     }
 
-    public List<ModymCity> getCountryCities(long countryId) throws ModymException {
+    public List<ModymCity> getCountryCities(long countryId) throws ModymClientException {
         return this.transport.doGet("system/countries/" + countryId + "/cities", null, null, CityListResponse.class)
                 .getResult();
     }
 
-    public List<ModymCity> getCountryCities(String countryIso23) throws ModymException {
+    public List<ModymCity> getCountryCities(String countryIso23) throws ModymClientException {
         return this.transport.doGet("system/countries/" + countryIso23 + "/cities", null, null, CityListResponse.class)
                 .getResult();
     }

@@ -9,6 +9,8 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -24,10 +26,10 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import com.modym.client.ModymException;
+import com.modym.client.ModymClientException;
 import com.modym.client.response.ModymResponse;
 import com.modym.client.utils.JsonUtils;
-import com.modym.client.utils.MapUtils;
+import com.modym.client.utils.ModymMapUtils;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -48,15 +50,15 @@ public class ModymApiTransport {
     private boolean connecting = false;
 
     public ModymApiTransport(String clientName, String clientKey, String clientSecret, URI baseUri)
-            throws ModymException {
+            throws ModymClientException {
         if (StringUtils.isBlank(clientName))
-            throw new ModymException("Unable to initiate ModymApiTransport: Missing client name");
+            throw new ModymClientException("Unable to initiate ModymApiTransport: Missing client name");
         if (StringUtils.isBlank(clientKey))
-            throw new ModymException("Unable to initiate ModymApiTransport: Missing client key");
+            throw new ModymClientException("Unable to initiate ModymApiTransport: Missing client key");
         if (StringUtils.isBlank(clientSecret))
-            throw new ModymException("Unable to initiate ModymApiTransport: Missing client secret");
+            throw new ModymClientException("Unable to initiate ModymApiTransport: Missing client secret");
         if (baseUri == null)
-            throw new ModymException("Unable to initiate ModymApiTransport: Invalid base URI");
+            throw new ModymClientException("Unable to initiate ModymApiTransport: Invalid base URI");
 
         this.clientName = clientName;
         this.clientKey = clientKey;
@@ -72,13 +74,13 @@ public class ModymApiTransport {
      * @param headers
      * @param cast
      * @return
-     * @throws ModymException
+     * @throws ModymClientException
      */
     protected <T extends ModymResponse> T doGet(
             String path,
             Map<String, Object> parameters,
             Map<String, String> headers,
-            Class<T> cast) throws ModymException {
+            Class<T> cast) throws ModymClientException {
 
         if (!this.connecting && !this.hasValidConnection())
             this.connect();
@@ -89,7 +91,7 @@ public class ModymApiTransport {
             this.setHeaders(get, headers);
             return this.execute(get, cast);
         } catch (IOException | URISyntaxException e) {
-            throw new ModymException(e.getMessage());
+            throw new ModymClientException(e.getMessage());
         }
     }
 
@@ -100,17 +102,17 @@ public class ModymApiTransport {
      * @param headers
      * @param cast
      * @return
-     * @throws ModymException
+     * @throws ModymClientException
      */
     protected <T extends ModymResponse> T doPost(
             String path,
             Map<String, Object> queryParameters,
             Object postBody,
             Map<String, String> headers,
-            Class<T> cast) throws ModymException {
+            Class<T> cast) throws ModymClientException {
 
         if (postBody != null && !JsonUtils.canEncodeDecode(postBody))
-            throw new ModymException("Unable to serialize post body of type '%s'", postBody.getClass().getName());
+            throw new ModymClientException("Unable to serialize post body of type '%s'", postBody.getClass().getName());
 
         if (!this.connecting && !this.hasValidConnection())
             this.connect();
@@ -126,7 +128,7 @@ public class ModymApiTransport {
             this.setHeaders(post, headers);
             return this.execute(post, cast);
         } catch (IOException | URISyntaxException e) {
-            throw new ModymException(e.getMessage());
+            throw new ModymClientException(e.getMessage());
         }
     }
 
@@ -136,17 +138,17 @@ public class ModymApiTransport {
      * @param headers
      * @param cast
      * @return
-     * @throws ModymException
+     * @throws ModymClientException
      */
     protected <T extends ModymResponse> T doPut(
             String path,
             Map<String, Object> parameters,
             Object putBody,
             Map<String, String> headers,
-            Class<T> cast) throws ModymException {
+            Class<T> cast) throws ModymClientException {
 
         if (putBody != null && !JsonUtils.canEncodeDecode(putBody))
-            throw new ModymException("Unable to serialize put body of type '%s'", putBody.getClass().getName());
+            throw new ModymClientException("Unable to serialize put body of type '%s'", putBody.getClass().getName());
 
         if (!this.connecting && !this.hasValidConnection())
             this.connect();
@@ -162,7 +164,7 @@ public class ModymApiTransport {
             this.setHeaders(put, headers);
             return this.execute(put, cast);
         } catch (IOException | URISyntaxException e) {
-            throw new ModymException(e.getMessage());
+            throw new ModymClientException(e.getMessage());
         }
     }
 
@@ -173,27 +175,27 @@ public class ModymApiTransport {
     /**
      * @return
      */
-    private void connect() throws ModymException {
+    private void connect() throws ModymClientException {
         if (hasValidConnection())
             return;
 
         this.connecting = true;
         this.authToken = null;
-        Map<String, Object> params = MapUtils.asMap("apiKey", this.clientKey, "apiSecret", this.clientSecret);
+        Map<String, Object> params = ModymMapUtils.asMap("apiKey", this.clientKey, "apiSecret", this.clientSecret);
         AuthenticationResponse response = null;
         try {
             response = this.doPost("authenticate", params, null, null, AuthenticationResponse.class);
-        } catch (ModymException e) {
-            e.printStackTrace();
+        } catch (ModymClientException e) {
+            Logger.getLogger(ModymApiTransport.class.getName()).log(Level.WARNING,
+                    "Failed to connect to Modym API Servers", e);
         } finally {
             this.connecting = false;
         }
 
         if (response == null)
-            throw new RuntimeException("Failed to establish network connection to MODYM Servers");
-
-        if (response == null || !response.isSuccess())
-            throw new RuntimeException("Invalid key / secret combination");
+            throw new ModymClientException("Failed to establish network connection to MODYM Servers");
+        if (!response.isSuccess())
+            throw new ModymClientException("Invalid key / secret combination");
 
         this.authToken = response.getResult().getToken();
         this.expiration = response.getResult().getTokenValidity();
@@ -264,14 +266,14 @@ public class ModymApiTransport {
     private <T extends ModymResponse> T execute(HttpUriRequest request, Class<T> cast)
             throws ClientProtocolException,
             IOException,
-            ModymException {
+            ModymClientException {
         HttpResponse response = new DefaultHttpClient().execute(request);
         HttpEntity entity = response.getEntity();
         String result = EntityUtils.toString(entity);
         T returnValue = JsonUtils.decode(result, cast);
         EntityUtils.consume(entity);
         if (!returnValue.isSuccess()) {
-            throw new ModymException(returnValue.getError());
+            throw new ModymClientException(returnValue.getError());
         }
         return returnValue;
     }

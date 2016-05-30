@@ -3,20 +3,15 @@
  */
 package com.modym.client.utils;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -24,6 +19,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.modym.client.ModymClientException;
 
 /**
  * @author bashar
@@ -47,6 +43,9 @@ public class JsonUtils {
         filters.setDefaultFilter(SimpleBeanPropertyFilter.serializeAllExcept(new String[] {}));
         filters.setFailOnUnknownId(false);
         mapper.setFilters(filters);
+    }
+
+    private JsonUtils() {
     }
 
     /**
@@ -75,85 +74,61 @@ public class JsonUtils {
      * @param object
      * @return
      */
-    public static String encode(Object object) {
+    public static String encode(Object object) throws ModymClientException {
         try {
             return JsonUtils.OBJECT_MAPPER.writeValueAsString(object);
-        } catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new ModymClientException("Failed to encode object", e);
         }
-        return "";
     }
 
     /**
      * @param object
      * @return
      */
-    public static String encodePretty(Object object) {
+    public static String encodePretty(Object object) throws ModymClientException {
         try {
             JsonUtils.OBJECT_MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
             return JsonUtils.OBJECT_MAPPER.writeValueAsString(object);
-        } catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new ModymClientException("Failed to encode object", e);
         } finally {
             JsonUtils.OBJECT_MAPPER.disable(SerializationFeature.INDENT_OUTPUT);
         }
-        return "";
     }
 
-    public static Map<String, Object> decode(InputStream inputStream) {
+    public static Map<String, Object> decode(InputStream inputStream) throws ModymClientException {
         try {
             TypeReference<HashMap<String, Object>> typeReference = new TypeReference<HashMap<String, Object>>() {};
             return JsonUtils.OBJECT_MAPPER.readValue(inputStream, typeReference);
-        } catch (JsonParseException e) {
-        } catch (JsonMappingException e) {
-        } catch (IOException e) {
+        } catch (Exception e) {
+            throw new ModymClientException("Failed to decode inputstring", e);
         }
-        return Collections.emptyMap();
     }
 
-    public static <T> T decode(InputStream inputStream, Class<T> castAs) {
+    public static <T> T decode(InputStream inputStream, Class<T> castAs) throws ModymClientException {
         try {
             return JsonUtils.OBJECT_MAPPER.readValue(inputStream, castAs);
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new ModymClientException("Failed to decode inputstream", e);
         }
-        return null;
     }
 
-    public static Map<String, Object> decode(String jsonString) {
+    public static Map<String, Object> decode(String jsonString) throws ModymClientException {
         try {
             TypeReference<HashMap<String, Object>> typeReference = new TypeReference<HashMap<String, Object>>() {};
             return JsonUtils.OBJECT_MAPPER.readValue(jsonString, typeReference);
-        } catch (JsonParseException e) {
-        } catch (JsonMappingException e) {
-        } catch (IOException e) {
+        } catch (Exception e) {
+            throw new ModymClientException("Failed to decode input string", e);
         }
-        return Collections.emptyMap();
     }
 
-    public static <T> T decode(String jsonString, Class<T> castAs) {
+    public static <T> T decode(String jsonString, Class<T> castAs) throws ModymClientException {
         try {
             return JsonUtils.OBJECT_MAPPER.readValue(jsonString, castAs);
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new ModymClientException("Failed to decode input string", e);
         }
-        return null;
     }
 
 }

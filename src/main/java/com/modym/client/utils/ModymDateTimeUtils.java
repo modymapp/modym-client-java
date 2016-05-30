@@ -17,8 +17,8 @@ import org.joda.time.format.PeriodFormatter;
 /**
  * @author bashar
  */
-public class DateTimeUtils extends org.joda.time.DateTimeUtils {
-    private DateTimeUtils() {
+public class ModymDateTimeUtils extends org.joda.time.DateTimeUtils {
+    private ModymDateTimeUtils() {
     };
 
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.longDate();
