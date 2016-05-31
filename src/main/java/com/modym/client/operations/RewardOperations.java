@@ -10,6 +10,7 @@ import java.util.Map;
 import com.modym.client.ModymClientException;
 import com.modym.client.objects.ModymPointTransaction;
 import com.modym.client.objects.ModymPointTransaction.ModymPointDebitTransaction;
+import com.modym.client.response.PointDebitTransactionResponse;
 import com.modym.client.response.PointTransactionListResponse;
 import com.modym.client.response.PointTransactionResponse;
 import com.modym.client.utils.ModymMapUtils;
@@ -58,15 +59,15 @@ public class RewardOperations extends AbstractOperations {
      * @return
      * @throws ModymClientException
      */
-    public ModymPointTransaction createDebitTransaction(
+    public ModymPointDebitTransaction createDebitTransaction(
             long customerId,
             BigDecimal points,
             String referenceId,
             String note) throws ModymClientException {
         Map<String, Object> params = ModymMapUtils.asMap("customerId", customerId, "points", points, "referenceId",
                 referenceId, "note", note, "capture", false);
-        return this.transport.doPost("loyalty/debit/points", null, params, null, PointTransactionResponse.class)
-                .getResult();
+        String path = "loyalty/debit/points";
+        return this.transport.doPost(path, null, params, null, PointDebitTransactionResponse.class).getResult();
     }
 
     /**
@@ -76,9 +77,7 @@ public class RewardOperations extends AbstractOperations {
      */
     public ModymPointDebitTransaction captureDebitTransaction(long transactionId) throws ModymClientException {
         String path = "loyalty/debit/" + Long.toString(transactionId) + "/capture";
-        ModymPointTransaction transaction =
-                this.transport.doPut(path, null, null, null, PointTransactionResponse.class).getResult();
-        return (ModymPointDebitTransaction) transaction;
+        return this.transport.doPut(path, null, null, null, PointDebitTransactionResponse.class).getResult();
     }
 
     /**
@@ -88,9 +87,7 @@ public class RewardOperations extends AbstractOperations {
      */
     public ModymPointDebitTransaction cancelDebitTransaction(long transactionId) throws ModymClientException {
         String path = "loyalty/debit/" + Long.toString(transactionId) + "/cancel";
-        ModymPointTransaction transaction =
-                this.transport.doPut(path, null, null, null, PointTransactionResponse.class).getResult();
-        return (ModymPointDebitTransaction) transaction;
+        return this.transport.doPut(path, null, null, null, PointDebitTransactionResponse.class).getResult();
     }
 
 }
