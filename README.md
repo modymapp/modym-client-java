@@ -5,7 +5,7 @@ This is the official modym library for Java.
 
 ### Latest Version 
 ##### [![](https://jitpack.io/v/modymapp/modym-client-java.svg)](https://jitpack.io/#modymapp/modym-client-java) 
-_May 21st, 2016_ - [v0.1.0-alpha](https://github.com/modymapp/modym-client-java/releases/tag/v0.1.0-alpha)
+_June 7th, 2016_ - [0.1.0-alpha](https://github.com/modymapp/modym-client-java/releases/tag/0.1.0-alpha)
 
 ### Maven
 This project uses JitPack as a maven repository.
@@ -23,8 +23,29 @@ Dependency:
 <dependency>
     <groupId>com.github.modymapp</groupId>
     <artifactId>modym-client-java</artifactId>
-    <version>v0.1.0-alpha</version>
+    <version>0.1.0-alpha</version>
 </dependency>
+```
+
+
+### Gradle
+JitPack gradle repository.
+
+Respository:
+```code
+    allprojects {
+	    repositories {
+		    ...
+		    maven { url "https://jitpack.io" }
+	    }
+    }
+```
+
+Dependency:
+```code
+    dependencies {
+        compile 'com.github.modymapp:modym-client-java:0.1.0-alpha'
+    }
 ```
 
 ### How To Use
@@ -32,12 +53,42 @@ The library is designed to provide data into and from https://api.modym.com, thi
 To be able to use this library you need an api key and api secret that can be genrated from the modym admin UI
 
 ```java
-Modym modym = new Modym("CLIENT_DOMAIN", "CLIENT_KEY", "CLIENT_KEY");
-ModymCustomer customer = modym.customerOperations().getCustomerByReferenceId("reference_id");
-ModymPointTransaction pointTransaction = modym.rewardOperations().createCreditTransaction(
-customer.getCustomerId(), new BigDecimal(100), 12, "granted 100 points as a reward");
+//connect to modym api, replace {CLIENT_DOMAIN}, {CLIENT_KEY} and {CLIENT_KEY} with the ones from modym admin api settings page.
+Modym modym = new Modym("{CLIENT_DOMAIN}", "{CLIENT_KEY}", "{CLIENT_KEY}");
 
-System.out.println(String.format("100 points granted to '%s %s' with the value: %.3f %s",
-customer.getFirstName(), customer.getLastName(), pointTransaction.getPointValue(), pointTransaction.getPointValueCurrency()));
+ // {reference_id} is the id of the customer in the client environment
+String customerReferenceId = "{reference_id}";
+ModymCustomer customer;
+
+// retrieve customer details
+customer = modym.customerOperations().getCustomerByReferenceId(customerReferenceId);
+
+// Print customer name along with available and total points
+System.out.println(String.format("customer: '%s %s'\navailable points: %f\ntotal points: %f",
+        customer.getFirstName(), customer.getLastName(), customer.getAvailablePoints(),
+        customer.getTotalPoints()));
+
+// grant 100 points to the customer valid for 12 months
+ModymPointTransaction credit = modym.rewardOperations().createCreditTransaction(customer.getCustomerId(),
+        new BigDecimal(100), 12, "Reward on visit");
+
+// after adding the points print customer name along with available and total points
+customer = modym.customerOperations().getCustomerByReferenceId(customerReferenceId);
+System.out.println();
+System.out.println(String.format(
+        "Before Approve:\ncustomer: '%s %s'\navailable points: %f\ntotal points: %f",
+        customer.getFirstName(), customer.getLastName(), customer.getAvailablePoints(),
+        customer.getTotalPoints()));
+
+// approve the points granted to the customer
+modym.rewardOperations().approveCreditTransaction(Long.parseLong(credit.getTransactionId()));
+
+// after approving the points print customer name along with available and total points
+customer = modym.customerOperations().getCustomerByReferenceId(customerReferenceId);
+System.out.println();
+System.out.println(String.format(
+        "After Approve:\ncustomer: '%s %s'\navailable points: %f\ntotal points: %f",
+        customer.getFirstName(), customer.getLastName(), customer.getAvailablePoints(),
+        customer.getTotalPoints()));
 ```
 
