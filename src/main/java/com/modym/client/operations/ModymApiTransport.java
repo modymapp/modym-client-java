@@ -128,7 +128,7 @@ public class ModymApiTransport {
             this.setHeaders(post, headers);
             return this.execute(post, cast);
         } catch (IOException | URISyntaxException e) {
-            throw new ModymClientException(e.getMessage());
+            throw new ModymClientException(e.getMessage(), e);
         }
     }
 
