@@ -6,8 +6,6 @@ package com.modym.client.operations;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.modym.client.ModymClientException;
 import com.modym.client.objects.ModymCategory;
 import com.modym.client.objects.ModymProduct;
@@ -18,13 +16,19 @@ import com.modym.client.response.PageResponse;
 import com.modym.client.response.ProductPageResponse;
 import com.modym.client.response.ProductResponse;
 import com.modym.client.response.SubCategoryResponse;
-import com.modym.client.utils.ModymMapUtils;
+
+import lombok.Getter;
 
 /**
  * @author bashar
  *
  */
 public class CatalogOperations extends AbstractOperations {
+
+    private static final String PATH_CATEGORIES = "catalog/categories";
+    private static final String PATH_SUBCATEGORIES = "catalog/subcategories";
+    private static final String PATH_PRODUCTS = "catalog/products";
+    private static final String PATH_PRODUCTS_SEARCH = PATH_PRODUCTS + "/search";
 
     /**
      * 
@@ -43,11 +47,10 @@ public class CatalogOperations extends AbstractOperations {
      * @throws ModymClientException
      */
     public PageResponse<ModymCategory> getCategories() throws ModymClientException {
-        String path = "catalog/categories";
         Map<String, Object> params = new HashMap<>();
         params.put("page", 0);
         params.put("size", 10);
-        return this.transport.doGet(path, params, null, CategoryPageResponse.class).getResult();
+        return this.transport.doGet(PATH_CATEGORIES, params, null, CategoryPageResponse.class).getResult();
     }
 
     /**
@@ -61,11 +64,10 @@ public class CatalogOperations extends AbstractOperations {
         if (size < 1)
             throw new ModymClientException("Page size cannot be less than 1");
 
-        String path = "catalog/categories";
         Map<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("size", size);
-        return this.transport.doGet(path, params, null, CategoryPageResponse.class).getResult();
+        return this.transport.doGet(PATH_CATEGORIES, params, null, CategoryPageResponse.class).getResult();
     }
 
     /**
@@ -74,7 +76,7 @@ public class CatalogOperations extends AbstractOperations {
      * @throws ModymClientException
      */
     public ModymCategory getCategory(long categoryId) throws ModymClientException {
-        String path = "catalog/categories/" + categoryId;
+        String path = PATH_CATEGORIES + "/" + categoryId;
         return this.transport.doGet(path, null, null, CategoryResponse.class).getResult();
     }
 
@@ -84,93 +86,13 @@ public class CatalogOperations extends AbstractOperations {
      * @throws ModymClientException
      */
     public ModymSubCategory getSubCategory(long subcategoryId) throws ModymClientException {
-        String path = "catalog/subcategories/" + subcategoryId;
+        String path = PATH_SUBCATEGORIES + "/" + subcategoryId;
         return this.transport.doGet(path, null, null, SubCategoryResponse.class).getResult();
     }
 
-    /**
-     * @param categoryId
-     * @param page
-     * @param size
-     * @return
-     * @throws ModymClientException
+    /*******************************************************************************************************************
+     * PRODUCT CALLS
      */
-    public PageResponse<ModymProduct> getProducts(
-            int page,
-            int size,
-            String sort,
-            boolean ascending,
-            boolean includeInactive) throws ModymClientException {
-        String path = "catalog/products/search";
-        Map<String, Object> params = new HashMap<>();
-        params.put("method", "all");
-        params.put("id", "0");
-        params.put("page", page);
-        params.put("size", size);
-        params.put("includeInActive", includeInactive);
-        if (StringUtils.isNotBlank(sort)) {
-            params.put("sort", sort);
-            params.put("direction", ascending ? "ASC" : "DESC");
-        }
-        return this.transport.doGet(path, params, null, ProductPageResponse.class).getResult();
-    }
-
-    /**
-     * @param categoryId
-     * @param page
-     * @param size
-     * @return
-     * @throws ModymClientException
-     */
-    public PageResponse<ModymProduct> getFeaturedProducts(
-            int page,
-            int size,
-            String sort,
-            boolean ascending,
-            boolean includeInactive) throws ModymClientException {
-        String path = "catalog/products/search";
-        Map<String, Object> params = new HashMap<>();
-        params.put("method", "featured");
-        params.put("id", "0");
-        params.put("page", page);
-        params.put("size", size);
-        params.put("includeInActive", includeInactive);
-        if (StringUtils.isNotBlank(sort)) {
-            params.put("sort", sort);
-            params.put("direction", ascending ? "ASC" : "DESC");
-        }
-        return this.transport.doGet(path, params, null, ProductPageResponse.class).getResult();
-    }
-
-    /**
-     * @param categoryId
-     * @param page
-     * @param size
-     * @return
-     * @throws ModymClientException
-     */
-    public PageResponse<ModymProduct> getCategoryProducts(long categoryId, int page, int size)
-            throws ModymClientException {
-        String path = "catalog/products/search";
-        Map<String, Object> params =
-                ModymMapUtils.asMap("method", "category", "id", categoryId, "page", page, "size", size);
-        return this.transport.doGet(path, params, null, ProductPageResponse.class).getResult();
-    }
-
-    /**
-     * @param categoryId
-     * @param page
-     * @param size
-     * @return
-     * @throws ModymClientException
-     */
-    public PageResponse<ModymProduct> getSubcategoryProducts(long subcategoryId, int page, int size)
-            throws ModymClientException {
-        String path = "catalog/products/search";
-        Map<String, Object> params =
-                ModymMapUtils.asMap("method", "subcategory", "id", subcategoryId, "page", page, "size", size);
-        return this.transport.doGet(path, params, null, ProductPageResponse.class).getResult();
-    }
 
     /**
      * @param productId
@@ -178,8 +100,131 @@ public class CatalogOperations extends AbstractOperations {
      * @throws ModymClientException
      */
     public ModymProduct getProduct(long productId) throws ModymClientException {
-        String path = "catalog/products/" + productId;
+        String path = PATH_PRODUCTS + "/" + productId;
         return this.transport.doGet(path, null, null, ProductResponse.class).getResult();
+    }
+
+    /**
+     * @param page
+     * @param size
+     * @param sort
+     * @param ascending
+     * @param includeInactive
+     * @return
+     * @throws ModymClientException
+     */
+    public PageResponse<ModymProduct> getAllProducts(int page, int size, ProductSort sort, boolean includeInactive)
+            throws ModymClientException {
+        return this.getProducts("all", null, page, size, sort, includeInactive);
+    }
+
+    /**
+     * @param categoryId
+     * @param page
+     * @param size
+     * @param sort
+     * @param ascending
+     * @param includeInactive
+     * @return
+     * @throws ModymClientException
+     */
+    public PageResponse<ModymProduct> getCategoryProducts(
+            long categoryId,
+            int page,
+            int size,
+            ProductSort sort,
+            boolean includeInactive) throws ModymClientException {
+        return this.getProducts("category", categoryId, page, size, sort, includeInactive);
+    }
+
+    /**
+     * @param subcategoryId
+     * @param page
+     * @param size
+     * @param sort
+     * @param ascending
+     * @param includeInactive
+     * @return
+     * @throws ModymClientException
+     */
+    public PageResponse<ModymProduct> getSubcategoryProducts(
+            long subcategoryId,
+            int page,
+            int size,
+            ProductSort sort,
+            boolean includeInactive) throws ModymClientException {
+        return this.getProducts("subcategory", subcategoryId, page, size, sort, includeInactive);
+    }
+
+    /**
+     * @param page
+     * @param size
+     * @param sort
+     * @param ascending
+     * @param includeInactive
+     * @return
+     * @throws ModymClientException
+     */
+    public PageResponse<ModymProduct> getFeaturedProducts(int page, int size, ProductSort sort, boolean includeInactive)
+            throws ModymClientException {
+        return this.getProducts("featured", null, page, size, sort, includeInactive);
+    }
+
+    /**
+     * @param method
+     * @param id
+     * @param page
+     * @param size
+     * @param sort
+     * @param ascending
+     * @param includeInactive
+     * @return
+     * @throws ModymClientException
+     */
+    private PageResponse<ModymProduct> getProducts(
+            String method,
+            Long id,
+            int page,
+            int size,
+            ProductSort sort,
+            boolean includeInactive) throws ModymClientException {
+
+        if (method == null || method.trim().length() == 0)
+            throw new ModymClientException("method cannot be null or empty");
+
+        Long searchId = new Long(0L);
+        if (id != null)
+            searchId = new Long(id);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("method", method);
+        params.put("id", searchId);
+        params.put("page", page);
+        params.put("size", size);
+        params.put("includeInActive", includeInactive);
+        if (sort != null) {
+            params.put("sort", sort.getField());
+            params.put("direction", sort.getDirection());
+        }
+
+        return this.transport.doGet(PATH_PRODUCTS_SEARCH, params, null, ProductPageResponse.class).getResult();
+    }
+
+    @Getter
+    public enum ProductSort {
+        NONE(null, null),
+        RECENTLY_ADDED("createTimestamp", "DESC"),
+        RECENTLY_UPDATED("updateTimestamp", "DESC"),
+        PRICE_HL("price", "DESC"),
+        PRICE_LH("price", "ASC");
+
+        private String field;
+        private String direction;
+
+        private ProductSort(String field, String direction) {
+            this.field = field;
+            this.direction = direction;
+        }
     }
 
 }
