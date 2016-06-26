@@ -55,6 +55,9 @@ public class ModymCustomer extends UDFType implements Serializable {
     private String levelName;
     private BigDecimal totalPoints;
     private BigDecimal availablePoints;
+    private BigDecimal totalLifetimePoints;
+    private BigDecimal totalLifetimeConsumedPoints;
+    
     private LocalDate loyaltyJoinDate;
 
     private boolean enabled;
