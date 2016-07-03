@@ -57,6 +57,8 @@ public class ModymCustomer extends UDFType implements Serializable {
     private BigDecimal availablePoints;
     private BigDecimal totalLifetimePoints;
     private BigDecimal totalLifetimeConsumedPoints;
+    private BigDecimal totalPendingCreditPoints;
+    private BigDecimal totalAuthorizedDebitPoints;
     
     private LocalDate loyaltyJoinDate;
 
