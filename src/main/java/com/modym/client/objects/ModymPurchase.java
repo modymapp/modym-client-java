@@ -28,7 +28,7 @@ public class ModymPurchase extends UDFType {
 
     private long customerId;
 
-    private long customerReferenceId;
+    private String customerReferenceId;
 
     private long sourceId;
 
