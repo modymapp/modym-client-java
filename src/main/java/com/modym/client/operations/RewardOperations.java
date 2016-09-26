@@ -4,17 +4,20 @@
 package com.modym.client.operations;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.modym.client.ModymClientException;
 import com.modym.client.objects.ModymPointTransaction;
 import com.modym.client.objects.ModymPointTransaction.ModymPointDebitTransaction;
+import com.modym.client.objects.ModymPurchaseLoyalty;
 import com.modym.client.response.PageResponse;
 import com.modym.client.response.PointDebitTransactionResponse;
 import com.modym.client.response.PointTransactionListResponse;
 import com.modym.client.response.PointTransactionPageResponse;
 import com.modym.client.response.PointTransactionResponse;
+import com.modym.client.response.PurchaseLoyaltyListResponse;
 import com.modym.client.utils.ModymMapUtils;
 
 /**
@@ -45,7 +48,7 @@ public class RewardOperations extends AbstractOperations {
     }
 
     /**
-     * @param customerId The customer id for whom we should return the loyalty transactions
+     * @param filters
      * @return
      */
     public PageResponse<ModymPointTransaction> getRewardTransactions(Map<String, Object> filters)
@@ -55,7 +58,7 @@ public class RewardOperations extends AbstractOperations {
     }
 
     /**
-     * @param customerId The customer id for whom we should return the loyalty transactions
+     * @param memberId The customer id for whom we should return the loyalty transactions
      * @return
      */
     public List<ModymPointTransaction> getRewardTransactions(long memberId) throws ModymClientException {
@@ -140,4 +143,34 @@ public class RewardOperations extends AbstractOperations {
         return this.transport.doPut(path, null, null, null, PointTransactionResponse.class).getResult();
     }
 
+
+    /**
+     * @param referenceIds
+     * @return
+     * @throws ModymClientException
+     */
+    public List<ModymPurchaseLoyalty> getPurchasesLoyalty(List<String> referenceIds) throws ModymClientException {
+        String path = "loyalty/purchases";
+        Map<String, Object> parameters= new HashMap<>();
+        parameters.put("referenceIds", concat(referenceIds, ","));
+        return this.transport.doGet(path, parameters, null, PurchaseLoyaltyListResponse.class).getResult();
+    }
+
+    /**
+     * @param items
+     * @param separotor
+     * @return
+     */
+    private String concat(List<String> items, String separotor) {
+        StringBuilder builder= new StringBuilder();
+        boolean first = true;
+        for ( String item : items ){
+            if ( !first ){
+                builder.append(separotor);
+            }
+            builder.append(item);
+            first = false;
+        }
+        return builder.toString();
+    }
 }
