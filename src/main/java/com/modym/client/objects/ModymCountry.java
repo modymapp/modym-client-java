@@ -22,4 +22,8 @@ public class ModymCountry {
     private String iso3;
 
     private int dialingCode;
+
+    public String getDisplayName() {
+        return this.name + " +" + dialingCode;
+    }
 }

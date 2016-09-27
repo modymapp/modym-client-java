@@ -6,7 +6,7 @@ package com.modym.client.response;
 
 import java.util.List;
 
-import com.modym.client.objects.ModymPurchaseLoyalty;
+import com.modym.client.objects.ModymPurchaseRewardSummary;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,5 +18,5 @@ import lombok.Setter;
 @Setter
 public class PurchaseLoyaltyListResponse extends ModymResponse {
 
-    private List<ModymPurchaseLoyalty> result;
+    private List<ModymPurchaseRewardSummary> result;
 }

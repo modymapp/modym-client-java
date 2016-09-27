@@ -8,10 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.modym.client.ModymClientException;
 import com.modym.client.objects.ModymPointTransaction;
 import com.modym.client.objects.ModymPointTransaction.ModymPointDebitTransaction;
-import com.modym.client.objects.ModymPurchaseLoyalty;
+import com.modym.client.objects.ModymPurchaseRewardSummary;
 import com.modym.client.response.PageResponse;
 import com.modym.client.response.PointDebitTransactionResponse;
 import com.modym.client.response.PointTransactionListResponse;
@@ -143,34 +145,17 @@ public class RewardOperations extends AbstractOperations {
         return this.transport.doPut(path, null, null, null, PointTransactionResponse.class).getResult();
     }
 
-
     /**
      * @param referenceIds
      * @return
      * @throws ModymClientException
      */
-    public List<ModymPurchaseLoyalty> getPurchasesLoyalty(List<String> referenceIds) throws ModymClientException {
+    public List<ModymPurchaseRewardSummary> getPurchasesRewardSummary(List<String> referenceIds)
+            throws ModymClientException {
         String path = "loyalty/purchases";
-        Map<String, Object> parameters= new HashMap<>();
-        parameters.put("referenceIds", concat(referenceIds, ","));
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("referenceIds", StringUtils.join(referenceIds, ","));
         return this.transport.doGet(path, parameters, null, PurchaseLoyaltyListResponse.class).getResult();
     }
 
-    /**
-     * @param items
-     * @param separotor
-     * @return
-     */
-    private String concat(List<String> items, String separotor) {
-        StringBuilder builder= new StringBuilder();
-        boolean first = true;
-        for ( String item : items ){
-            if ( !first ){
-                builder.append(separotor);
-            }
-            builder.append(item);
-            first = false;
-        }
-        return builder.toString();
-    }
 }

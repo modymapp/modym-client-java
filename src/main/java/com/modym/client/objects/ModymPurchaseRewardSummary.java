@@ -14,7 +14,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ModymPurchaseLoyalty {
+public class ModymPurchaseRewardSummary {
     private Long purchaseId;
     private String referenceId;
     private BigDecimal pendingPoints;
