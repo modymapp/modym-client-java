@@ -41,6 +41,8 @@ public abstract class ModymPointTransaction {
     @Getter
     @Setter
     public static class ModymPointCreditTransaction extends ModymPointTransaction {
+        private String rewardActionCategory;
+        private String rewardActionName;
         private LocalDate expiration;
         private CreditTransactionStatus status;
     }

@@ -14,6 +14,7 @@ import com.modym.client.ModymClientException;
 import com.modym.client.objects.ModymPointTransaction;
 import com.modym.client.objects.ModymPointTransaction.ModymPointDebitTransaction;
 import com.modym.client.objects.ModymPurchaseRewardSummary;
+import com.modym.client.response.MapListResponse;
 import com.modym.client.response.PageResponse;
 import com.modym.client.response.PointDebitTransactionResponse;
 import com.modym.client.response.PointTransactionListResponse;
@@ -47,6 +48,18 @@ public class RewardOperations extends AbstractOperations {
     public ModymPointTransaction getRewardTransaction(String transactionId) throws ModymClientException {
         String path = "loyalty/transactions/" + transactionId;
         return this.transport.doGet(path, null, null, PointTransactionResponse.class).getResult();
+    }
+
+    /**
+     * @param filters
+     * @return
+     * @throws ModymClientException
+     */
+    public List<Map<String, Object>> getRewardCategoryBreakdown(Map<String, Object> filters)
+            throws ModymClientException {
+        String path = "loyalty/transaction-breakdown";
+        return this.transport.doGet(path, filters, null, MapListResponse.class).getResult();
+
     }
 
     /**
