@@ -16,9 +16,12 @@ import com.modym.client.utils.ModymMapUtils;
  *
  */
 public class UserOperations extends AbstractOperations {
+    
+    private static final String FIELD_PSWD = "password";
+    private static final String FIELD_EMAIL = "email";
 
     /**
-     * 
+     * @param transport
      */
     public UserOperations(ModymApiTransport transport) {
         super(transport);
@@ -35,7 +38,7 @@ public class UserOperations extends AbstractOperations {
      * @throws ModymClientException
      */
     public ModymCustomer authenticate(String email, String password) throws ModymClientException {
-        Map<String, Object> params = ModymMapUtils.asMap("email", email, "password", password);
+        Map<String, Object> params = ModymMapUtils.asMap(FIELD_EMAIL, email, FIELD_PSWD, password);
         CustomerResponse response = this.transport.doPost("users/authenticate", params, null, null, CustomerResponse.class);
         if (!response.isSuccess())
             throw new ModymClientException(response.getError());
@@ -49,30 +52,39 @@ public class UserOperations extends AbstractOperations {
      * @throws ModymClientException
      */
     public boolean register(long customerId, String password) throws ModymClientException {
-        Map<String, Object> params = ModymMapUtils.asMap("customerId", customerId, "password", password);
+        Map<String, Object> params = ModymMapUtils.asMap("customerId", customerId, FIELD_PSWD, password);
         return this.transport.doPost("users/register", params, null, null, BooleanResponse.class).getResult();
     }
     
     /**
      * @param customerId
-     * @param password
+     * @param newPassword
      * @return
      * @throws ModymClientException
      */
     public boolean resetPassword(long customerId, String newPassword) throws ModymClientException {
-        Map<String, Object> params = ModymMapUtils.asMap("customerId", customerId, "password", newPassword);
+        Map<String, Object> params = ModymMapUtils.asMap("customerId", customerId, FIELD_PSWD, newPassword);
         return this.transport.doPost("users/reset-password", params, null, null, BooleanResponse.class).getResult();
     }
 
     /**
-     * @param email
-     * @param password
+     * @param customerId
      * @return
      * @throws ModymClientException
      */
     public boolean isRegistered(long customerId) throws ModymClientException {
         return this.transport.doPost("users/registered/" + customerId, null, null, null, BooleanResponse.class)
                 .getResult();
+    }
+
+    /**
+     * @param email
+     * @return
+     * @throws ModymClientException 
+     */
+    public ModymCustomer getRegisteredCustomerByEmail(String email) throws ModymClientException {
+        Map<String, Object> params = ModymMapUtils.asMap(FIELD_EMAIL, email);
+        return this.transport.doPost("users/registered/email", params, null, null, CustomerResponse.class).getResult();
     }
 
 }

@@ -30,7 +30,6 @@ public class ModymCustomer extends UDFType implements Serializable {
     private String phoneMobile;
     private String phoneOther;
     private ModymGender gender;
-    private ModymMaritalStatus maritalStatus;
     private LocalDate dateOfBirth;
     private Integer age;
     private String address1;
