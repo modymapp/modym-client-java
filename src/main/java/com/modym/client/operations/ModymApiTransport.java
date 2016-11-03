@@ -22,6 +22,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -121,7 +122,7 @@ public class ModymApiTransport {
             HttpPost post = new HttpPost(uri);
             headers = this.getDefaultHeaderMap(headers);
             if (postBody != null) {
-                HttpEntity entity = new StringEntity(JsonUtils.encode(postBody));
+                HttpEntity entity = new StringEntity(JsonUtils.encode(postBody), ContentType.APPLICATION_JSON);
                 post.setEntity(entity);
                 headers.put("Content-type", "application/json");
             }
@@ -157,7 +158,7 @@ public class ModymApiTransport {
             HttpPut put = new HttpPut(uri);
             headers = this.getDefaultHeaderMap(headers);
             if (putBody != null) {
-                HttpEntity entity = new StringEntity(JsonUtils.encode(putBody));
+                HttpEntity entity = new StringEntity(JsonUtils.encode(putBody), ContentType.APPLICATION_JSON);
                 put.setEntity(entity);
                 headers.put("Content-type", "application/json");
             }
