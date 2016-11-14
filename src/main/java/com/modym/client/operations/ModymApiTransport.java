@@ -17,6 +17,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpMessage;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -49,6 +50,7 @@ public class ModymApiTransport {
     private String authToken = null;
     private long expiration = 0L;
     private boolean connecting = false;
+    private final HttpClient httpClient = new DefaultHttpClient();
 
     public ModymApiTransport(String clientName, String clientKey, String clientSecret, URI baseUri)
             throws ModymClientException {
@@ -265,10 +267,9 @@ public class ModymApiTransport {
      * @throws IOException
      */
     private <T extends ModymResponse> T execute(HttpUriRequest request, Class<T> cast)
-            throws ClientProtocolException,
-            IOException,
+            throws IOException,
             ModymClientException {
-        HttpResponse response = new DefaultHttpClient().execute(request);
+        HttpResponse response = this.httpClient.execute(request);
         HttpEntity entity = response.getEntity();
         String result = EntityUtils.toString(entity);
         T returnValue = JsonUtils.decode(result, cast);
