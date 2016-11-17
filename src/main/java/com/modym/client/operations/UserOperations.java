@@ -55,6 +55,17 @@ public class UserOperations extends AbstractOperations {
         Map<String, Object> params = ModymMapUtils.asMap("customerId", customerId, FIELD_PSWD, password);
         return this.transport.doPost("users/register", params, null, null, BooleanResponse.class).getResult();
     }
+
+    /**
+     * @param customerId
+     * @param password
+     * @return
+     * @throws ModymClientException
+     */
+    public boolean register(long customerId, String password, String email) throws ModymClientException {
+        Map<String, Object> params = ModymMapUtils.asMap("customerId", customerId, FIELD_PSWD, password, FIELD_EMAIL, email);
+        return this.transport.doPost("users/register", params, null, null, BooleanResponse.class).getResult();
+    }
     
     /**
      * @param customerId
