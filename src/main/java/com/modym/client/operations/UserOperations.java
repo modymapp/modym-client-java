@@ -77,6 +77,17 @@ public class UserOperations extends AbstractOperations {
         Map<String, Object> params = ModymMapUtils.asMap("customerId", customerId, FIELD_PSWD, newPassword);
         return this.transport.doPost("users/reset-password", params, null, null, BooleanResponse.class).getResult();
     }
+    
+    /**
+     * @param customerId
+     * @param newPassword
+     * @return
+     * @throws ModymClientException
+     */
+    public boolean resetPassword(long customerId, String newPassword, String newEmail) throws ModymClientException {
+        Map<String, Object> params = ModymMapUtils.asMap("customerId", customerId, FIELD_PSWD, newPassword, FIELD_EMAIL, newEmail);
+        return this.transport.doPost("users/reset-password", params, null, null, BooleanResponse.class).getResult();
+    }
 
     /**
      * @param customerId
@@ -98,4 +109,12 @@ public class UserOperations extends AbstractOperations {
         return this.transport.doPost("users/registered/email", params, null, null, CustomerResponse.class).getResult();
     }
 
+    /**
+     * @param customerId
+     * @return
+     * @throws ModymClientException 
+     */
+    public ModymCustomer getUserDetails(Long customerId) throws ModymClientException {
+        return this.transport.doPost("users/user/" + customerId, null, null, null, CustomerResponse.class).getResult();
+    }
 }
