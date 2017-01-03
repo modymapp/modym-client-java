@@ -15,6 +15,7 @@ import com.modym.client.operations.MessageOperations;
 import com.modym.client.operations.ModymApiTransport;
 import com.modym.client.operations.PurchaseOperations;
 import com.modym.client.operations.RewardOperations;
+import com.modym.client.operations.SecurityOperations;
 import com.modym.client.operations.SystemOperations;
 import com.modym.client.operations.UserOperations;
 
@@ -42,6 +43,8 @@ public class Modym {
     private final UserOperations userOperations;
 
     private final SystemOperations systemOperations;
+    
+    private final SecurityOperations securityOperations;
 
     /*******************************************************************************************************************
      * CONSTRUCTOR AND CONNECTION MANAGEMENT
@@ -51,10 +54,11 @@ public class Modym {
      * @param transport
      * @param apiKey
      * @param apiSecret
-     * @throws URISyntaxException 
-     * @throws ModymClientException 
+     * @throws URISyntaxException
+     * @throws ModymClientException
      */
-    public Modym(String clientName, String clientKey, String clientSecret) throws URISyntaxException, ModymClientException {
+    public Modym(String clientName, String clientKey, String clientSecret)
+            throws URISyntaxException, ModymClientException {
         this(clientName, clientKey, clientSecret, DEFAULT_SCHEME, DEFAULT_HOST, DEFAULT_PORT, DEFAULT_PREFIX,
                 DEFAULT_VERSION);
     }
@@ -63,7 +67,7 @@ public class Modym {
      * @param transport
      * @param apiKey
      * @param apiSecret
-     * @throws ModymClientException 
+     * @throws ModymClientException
      */
     public Modym(String clientName, String clientKey, String clientSecret, String scheme, String host, int port,
             String prefix, int version) throws ModymClientException {
@@ -75,8 +79,8 @@ public class Modym {
         assertTrue(port > 0, "port must be a positive integer");
         assertTrue(version == 1 || version == 2, "version can be one of the following: 1, 2");
 
-        URIBuilder builder =
-                new URIBuilder().setScheme(scheme).setHost(host).setPort(port).setPath(prefix + "/v" + version);
+        URIBuilder builder = new URIBuilder().setScheme(scheme).setHost(host).setPort(port)
+                .setPath(prefix + "/v" + version);
 
         URI baseUri = null;
         try {
@@ -93,6 +97,7 @@ public class Modym {
         this.purchaseOperations = new PurchaseOperations(transport);
         this.systemOperations = new SystemOperations(transport);
         this.userOperations = new UserOperations(transport);
+        this.securityOperations = new SecurityOperations(transport);
     }
 
     /**
@@ -142,6 +147,14 @@ public class Modym {
      */
     public UserOperations userOperations() {
         return this.userOperations;
+    }
+    
+
+    /**
+     * @return the securityOperations
+     */
+    public SecurityOperations securityOperations() {
+        return this.securityOperations;
     }
 
     private void assertTrue(boolean condition, String message) throws ModymClientException {
