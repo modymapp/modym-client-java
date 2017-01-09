@@ -59,7 +59,17 @@ public class RewardOperations extends AbstractOperations {
             throws ModymClientException {
         String path = "loyalty/transaction-breakdown";
         return this.transport.doGet(path, filters, null, MapListResponse.class).getResult();
+    }
 
+    /**
+     * @param filters
+     * @return
+     * @throws ModymClientException
+     */
+    public List<Map<String, Object>> getMonthlyReward(Map<String, Object> filters)
+            throws ModymClientException {
+        String path = "loyalty/transaction-monthly";
+        return this.transport.doGet(path, filters, null, MapListResponse.class).getResult();
     }
 
     /**
