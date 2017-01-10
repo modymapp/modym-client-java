@@ -16,7 +16,7 @@ import lombok.Setter;
 public class ModymUserAuthenticationToken {
 
     private String token;
-    
+    private String url;
     private LocalDateTime created;
 
 }
