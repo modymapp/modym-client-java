@@ -92,3 +92,5 @@ System.out.println(String.format(
         customer.getTotalPoints()));
 ```
 
+### Extras
+Modym API documentation is a great resource : http://www.modym.com/api/
