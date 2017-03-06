@@ -9,13 +9,11 @@ import java.util.Map;
 import com.modym.client.ModymClientException;
 import com.modym.client.objects.ModymCategory;
 import com.modym.client.objects.ModymProduct;
-import com.modym.client.objects.ModymSubCategory;
 import com.modym.client.response.CategoryPageResponse;
 import com.modym.client.response.CategoryResponse;
 import com.modym.client.response.PageResponse;
 import com.modym.client.response.ProductPageResponse;
 import com.modym.client.response.ProductResponse;
-import com.modym.client.response.SubCategoryResponse;
 
 import lombok.Getter;
 
@@ -26,7 +24,6 @@ import lombok.Getter;
 public class CatalogOperations extends AbstractOperations {
 
     private static final String PATH_CATEGORIES = "catalog/categories";
-    private static final String PATH_SUBCATEGORIES = "catalog/subcategories";
     private static final String PATH_PRODUCTS = "catalog/products";
     private static final String PATH_PRODUCTS_SEARCH = PATH_PRODUCTS + "/search";
 
@@ -80,16 +77,6 @@ public class CatalogOperations extends AbstractOperations {
         return this.transport.doGet(path, null, null, CategoryResponse.class).getResult();
     }
 
-    /**
-     * @param categoryId
-     * @return
-     * @throws ModymClientException
-     */
-    public ModymSubCategory getSubCategory(long subcategoryId) throws ModymClientException {
-        String path = PATH_SUBCATEGORIES + "/" + subcategoryId;
-        return this.transport.doGet(path, null, null, SubCategoryResponse.class).getResult();
-    }
-
     /*******************************************************************************************************************
      * PRODUCT CALLS
      */
@@ -137,24 +124,6 @@ public class CatalogOperations extends AbstractOperations {
         return this.getProducts("category", categoryId, page, size, sort, includeInactive);
     }
 
-    /**
-     * @param subcategoryId
-     * @param page
-     * @param size
-     * @param sort
-     * @param ascending
-     * @param includeInactive
-     * @return
-     * @throws ModymClientException
-     */
-    public PageResponse<ModymProduct> getSubcategoryProducts(
-            long subcategoryId,
-            int page,
-            int size,
-            ProductSort sort,
-            boolean includeInactive) throws ModymClientException {
-        return this.getProducts("subcategory", subcategoryId, page, size, sort, includeInactive);
-    }
 
     /**
      * @param page
@@ -192,9 +161,9 @@ public class CatalogOperations extends AbstractOperations {
         if (method == null || method.trim().length() == 0)
             throw new ModymClientException("method cannot be null or empty");
 
-        Long searchId = new Long(0L);
+        Long searchId = 0L;
         if (id != null)
-            searchId = new Long(id);
+            searchId = id;
 
         Map<String, Object> params = new HashMap<>();
         params.put("method", method);
