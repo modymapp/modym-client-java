@@ -68,12 +68,4 @@ public class ModymCustomer extends UDFType implements Serializable {
         FEMALE,
         UNSPECIFIED;
     }
-
-    public enum ModymMaritalStatus {
-        SINGLE,
-        MARRIED,
-        WIDOWED,
-        DIVORCED,
-        UNSPECIFIED;
-    }
 }
