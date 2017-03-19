@@ -187,7 +187,7 @@ public class ModymApiTransport {
         Map<String, Object> params = ModymMapUtils.asMap("apiKey", this.clientKey, "apiSecret", this.clientSecret);
         AuthenticationResponse response = null;
         try {
-            response = this.doPost("authenticate", params, null, null, AuthenticationResponse.class);
+            response = this.doPost("authenticate", null, params, null, AuthenticationResponse.class);
         } catch (ModymClientException e) {
             Logger.getLogger(ModymApiTransport.class.getName()).log(Level.WARNING,
                     "Failed to connect to Modym API Servers", e);
