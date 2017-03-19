@@ -20,7 +20,9 @@ public class ModymCategory {
     private String name;
 
     private String description;
+    
+    private ModymCategory parent;
 
-    private List<ModymSubCategory> subcategories;
+    private List<ModymCategory> subcategories;
 
 }

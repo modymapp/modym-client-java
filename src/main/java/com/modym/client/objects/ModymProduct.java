@@ -31,10 +31,6 @@ public class ModymProduct extends UDFType {
 
     protected String categoryName;
 
-    protected Long subcategoryId;
-
-    protected String subcategoryName;
-
     protected Long brandId;
 
     protected String brandName;
