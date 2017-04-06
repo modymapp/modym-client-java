@@ -49,7 +49,7 @@ public class PurchaseOperations extends AbstractOperations {
      * @throws ModymClientException
      */
     public ModymPurchase getPurchaseByReferenceId(String purchaseReferenceId) throws ModymClientException {
-        String path = "purchases/referenceId/" + purchaseReferenceId;
+        String path = "purchases/reference/" + purchaseReferenceId;
         return this.transport.doGet(path, null, null, PurchaseResponse.class).getResult();
     }
 

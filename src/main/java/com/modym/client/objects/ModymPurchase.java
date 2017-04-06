@@ -32,7 +32,7 @@ public class ModymPurchase extends UDFType {
 
     private long sourceId;
 
-    private long sourceReferenceId;
+    private String sourceReferenceId;
 
     private String sourceName;
 

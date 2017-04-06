@@ -23,9 +23,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 
 import com.modym.client.ModymClientException;
@@ -50,9 +55,10 @@ public class ModymApiTransport {
     private String authToken = null;
     private long expiration = 0L;
     private boolean connecting = false;
-    private final HttpClient httpClient = new DefaultHttpClient();
+    
+    private final HttpClient httpClient ;
 
-    public ModymApiTransport(String clientName, String clientKey, String clientSecret, URI baseUri)
+    public ModymApiTransport(String clientName, String clientKey, String clientSecret, URI baseUri, String scheme, int port)
             throws ModymClientException {
         if (StringUtils.isBlank(clientName))
             throw new ModymClientException("Unable to initiate ModymApiTransport: Missing client name");
@@ -67,6 +73,12 @@ public class ModymApiTransport {
         this.clientKey = clientKey;
         this.clientSecret = clientSecret;
         this.baseUri = baseUri;
+        
+
+        SchemeRegistry schemeRegistry = new SchemeRegistry();
+        schemeRegistry.register( new Scheme(scheme, port, PlainSocketFactory.getSocketFactory()));
+        ClientConnectionManager cm = new PoolingClientConnectionManager(schemeRegistry);
+        this.httpClient = new DefaultHttpClient(cm);
 
         this.connect();
     }
