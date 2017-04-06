@@ -89,7 +89,7 @@ public class Modym {
             throw new ModymClientException("Invalid URI: %s://%s:%d%s/v%d", scheme, host, port, prefix, version);
         }
 
-        ModymApiTransport transport = new ModymApiTransport(clientName, clientKey, clientSecret, baseUri, scheme, port);
+        ModymApiTransport transport = new ModymApiTransport(clientName, clientKey, clientSecret, baseUri);
         this.catalogOperations = new CatalogOperations(transport);
         this.customerOperations = new CustomerOperations(transport);
         this.messageOperations = new MessageOperations(transport);
