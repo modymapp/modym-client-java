@@ -5,7 +5,7 @@ This is the official modym library for Java.
 
 ### Latest Version 
 ##### [![](https://jitpack.io/v/modymapp/modym-client-java.svg)](https://jitpack.io/#modymapp/modym-client-java) 
-_April 6th, 2017_ - [0.1.9-alpha](https://github.com/modymapp/modym-client-java/releases/tag/0.1.9-alpha)
+_April 6th, 2017_ - [0.1.9.1-alpha](https://github.com/modymapp/modym-client-java/releases/tag/0.1.9.1-alpha)
 
 ### Maven
 This project uses JitPack as a maven repository.
@@ -23,7 +23,7 @@ Dependency:
 <dependency>
     <groupId>com.github.modymapp</groupId>
     <artifactId>modym-client-java</artifactId>
-    <version>0.1.9-alpha</version>
+    <version>0.1.9.1-alpha</version>
 </dependency>
 ```
 
@@ -44,7 +44,7 @@ Respository:
 Dependency:
 ```code
     dependencies {
-        compile 'com.github.modymapp:modym-client-java:0.1.9-alpha'
+        compile 'com.github.modymapp:modym-client-java:0.1.9.1-alpha'
     }
 ```
 
