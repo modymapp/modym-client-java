@@ -37,6 +37,8 @@ public class ModymCustomer extends UDFType implements Serializable {
     private String postcode;
     private String cityName;
     private String countryIso2;
+    private String organizationName;
+    private String organizationCode;
     private String company;
     private String position;
     private String language;
@@ -44,23 +46,30 @@ public class ModymCustomer extends UDFType implements Serializable {
 
     private BigDecimal lifetimeRevenue = null;
     private String lifetimeRevenueCurrency = null;
-    private Integer activityCount = null;
     private Integer purchaseCount = null;
-    private LocalDate lastActivity = null;
     private LocalDate lastPurchase = null;
 
     private Long accountId;
     private Long levelId;
     private String levelName;
+    
     private BigDecimal totalPoints;
+    private BigDecimal totalPointsValue;
+    private String pointValueCurrency;
     private BigDecimal availablePoints;
+    private BigDecimal availablePointsValue;
     private BigDecimal totalLifetimePoints;
+    private BigDecimal totalLifetimePointsValue;
     private BigDecimal totalLifetimeConsumedPoints;
+    private BigDecimal totalLifetimeConsumedPointsValue;
     private BigDecimal totalPendingCreditPoints;
     private BigDecimal totalAuthorizedDebitPoints;
     
     private LocalDate loyaltyJoinDate;
 
+    private boolean hasPortalAccount;
+    private boolean portalAccountLocked;
+    private int portalAccountLoginAttempts= 0;
     private boolean enabled;
 
     public enum ModymGender {

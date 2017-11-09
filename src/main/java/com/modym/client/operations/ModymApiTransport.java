@@ -276,7 +276,7 @@ public class ModymApiTransport {
         T returnValue = JsonUtils.decode(result, cast);
         EntityUtils.consume(entity);
         if (!returnValue.isSuccess()) {
-            throw new ModymClientException(returnValue.getError());
+            throw new ModymClientException(response.getStatusLine() != null ? response.getStatusLine().getStatusCode() : -1, returnValue.getError());
         }
         return returnValue;
     }

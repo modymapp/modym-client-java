@@ -54,11 +54,10 @@ public class Modym {
      * @param transport
      * @param apiKey
      * @param apiSecret
-     * @throws URISyntaxException
      * @throws ModymClientException
      */
     public Modym(String clientName, String clientKey, String clientSecret)
-            throws URISyntaxException, ModymClientException {
+            throws ModymClientException {
         this(clientName, clientKey, clientSecret, DEFAULT_SCHEME, DEFAULT_HOST, DEFAULT_PORT, DEFAULT_PREFIX,
                 DEFAULT_VERSION);
     }
