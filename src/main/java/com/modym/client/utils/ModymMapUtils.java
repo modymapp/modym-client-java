@@ -13,7 +13,11 @@ import java.util.Map;
  * @author $Author: bsaleh $
  * @version $Revision: 1.1 $
  */
-public class ModymMapUtils extends org.apache.commons.collections.MapUtils {
+public class ModymMapUtils {
+    
+    private ModymMapUtils(){
+    }
+    
     public static Map<String, Object> asMap(Object... objects) {
         if (objects.length % 2 != 0) {
             return null;

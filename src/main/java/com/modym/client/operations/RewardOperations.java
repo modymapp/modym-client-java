@@ -122,6 +122,19 @@ public class RewardOperations extends AbstractOperations {
 
     /**
      * @param transactionId
+     * @param verificationCode
+     * @return
+     * @throws ModymClientException
+     */
+    public ModymPointDebitTransaction captureDebitTransaction(long transactionId, String verificationCode) throws ModymClientException {
+        String path = "loyalty/debit/" + Long.toString(transactionId) + "/capture";
+        Map<String, Object> params = ModymMapUtils.asMap("authorizationCode", verificationCode);
+        
+        return this.transport.doPut(path, null, params, null, PointDebitTransactionResponse.class).getResult();
+    }
+
+    /**
+     * @param transactionId
      * @return
      * @throws ModymClientException
      */

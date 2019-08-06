@@ -8,7 +8,7 @@ package com.modym.client.objects;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 import org.joda.time.LocalDateTime;
 
 import lombok.Getter;
@@ -89,7 +89,7 @@ public class ModymPurchase extends UDFType {
         @Override
         public String toString() {
             return WordUtils.capitalizeFully(this.name()).replaceAll("_", " ");
-        };
+        }
     }
 
 }

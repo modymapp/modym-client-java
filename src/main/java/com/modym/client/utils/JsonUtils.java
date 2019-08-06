@@ -42,7 +42,7 @@ public class JsonUtils {
         SimpleFilterProvider filters = new SimpleFilterProvider();
         filters.setDefaultFilter(SimpleBeanPropertyFilter.serializeAllExcept(new String[] {}));
         filters.setFailOnUnknownId(false);
-        mapper.setFilters(filters);
+        mapper.setFilterProvider(filters);
     }
 
     private JsonUtils() {
