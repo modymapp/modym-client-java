@@ -42,6 +42,11 @@ public class CustomerOperations extends AbstractOperations {
         return this.transport.doGet(path, parameters, null, CustomerResponse.class).getResult();
     }
 
+    public ModymCustomer getCustomerByEmail(String email) throws ModymClientException {
+        Map<String, Object> parameters = ModymMapUtils.asMap("method", "email", "query", email);
+        return this.transport.doGet("customers/lookup", parameters, null, CustomerResponse.class).getResult();
+    }
+
     public ModymCustomer lookupCustomer(String reference) throws ModymClientException {
         Map<String, Object> params = ModymMapUtils.asMap("method", "reference", "query", reference);
         return this.transport.doGet("customers/lookup", params, null, CustomerResponse.class).getResult();

@@ -41,6 +41,7 @@ import lombok.Setter;
  * @author bashar
  *
  */
+@SuppressWarnings("deprecation")
 public class ModymApiTransport {
 
     private final String clientName;
@@ -51,6 +52,7 @@ public class ModymApiTransport {
     private String authToken = null;
     private long expiration = 0L;
     private boolean connecting = false;
+    
     private final HttpClient httpClient = new DefaultHttpClient(new PoolingClientConnectionManager());
 
     public ModymApiTransport(String clientName, String clientKey, String clientSecret, URI baseUri)
@@ -238,7 +240,7 @@ public class ModymApiTransport {
      * @return
      */
     private Map<String, String> getDefaultHeaderMap(Map<String, String> map) {
-        Map<String, String> headerMap = new HashMap<String, String>();
+        Map<String, String> headerMap = new HashMap<>();
         // headerMap.put("Content-Type", "application/json; charset=UTF-8");
         headerMap.put("Client", this.clientName);
         if (this.authToken != null)
@@ -256,7 +258,7 @@ public class ModymApiTransport {
         if (headers == null)
             return;
         for (Entry<String, String> entry : headers.entrySet()) {
-            message.setHeader(entry.getKey(), entry.getValue().toString());
+            message.setHeader(entry.getKey(), entry.getValue());
         }
     }
 

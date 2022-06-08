@@ -51,21 +51,32 @@ public abstract class ModymPointTransaction {
     @Setter
     public static class ModymPointDebitTransaction extends ModymPointTransaction {
         private DebitTransactionStatus status;
+        private DebitTransactionSource source;
     }
 
     /**
      *
      */
-    public static enum DebitTransactionStatus {
+    public enum DebitTransactionStatus {
         AUTHORIZED,
         CAPTURED,
         CANCELLED;
     }
 
     /**
+    *
+    */
+    public enum DebitTransactionSource {
+        REDEMPTION,
+        REVERSAL,
+        TRANSFER,
+        CASHBACK;
+    }
+
+    /**
      *
      */
-    public static enum CreditTransactionStatus {
+    public enum CreditTransactionStatus {
         PENDING,
         APPROVED,
         REJECTED,
